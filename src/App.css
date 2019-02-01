@@ -25,3 +25,11 @@
 .App .ant-layout-sider {
   background: inherit;
 }
+
+.fade-enter {
+  background: #fff;
+}
+
+.fade-leave {
+
+}

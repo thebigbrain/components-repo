@@ -1,46 +1,58 @@
 import React, {Component} from 'react';
-// import addons from '@storybook/addons';
-// import Events from '@storybook/core-events';
-// import { getStoryById } from './stories';
-import {Empty, Layout} from 'antd';
-import {Router} from "@reach/router"
+import {Layout} from 'antd';
+import {Router} from '@reach/router';
+// import {
+//   TransitionGroup,
+//   CSSTransition
+// } from "react-transition-group";
 import Theme from './components/theme/Theme';
-// import logo from './logo.svg';
 import './App.css';
 import ComponentRepo from './components/repo/ComponentRepo';
+import PreviewProvider from './containers/PreviewProvider';
+import StoryBook from './containers/StoryBook';
+import Toolbar from './components/toolbar/Toolbar';
 
-const AppLayout = ({children}) => (
-  <Layout>
-    <Layout.Sider>
-      <ComponentRepo/>
-    </Layout.Sider>
+const AppLayout = React.memo(({children, location}) => {
+  return (
     <Layout>
-      <Layout.Header>
-        {/*<Breadcrumb>*/}
-        {/*<Breadcrumb.Item><Link to='/'>Home</Link></Breadcrumb.Item>*/}
-        {/*/!*<Breadcrumb.Item><Link to={'app.center'}>Application Center</Link></Breadcrumb.Item>*!/*/}
-        {/*<Breadcrumb.Item><Link to={'component.list/compos'}>Component List</Link></Breadcrumb.Item>*/}
-        {/*<Breadcrumb.Item>An Application</Breadcrumb.Item>*/}
-        {/*</Breadcrumb>*/}
-      </Layout.Header>
-      <Layout.Content><Empty/></Layout.Content>
-      <Layout.Footer>Footer</Layout.Footer>
+      <Layout.Sider>
+        <StoryBook.Provider><ComponentRepo/></StoryBook.Provider>
+      </Layout.Sider>
+      <Layout>
+        <React.Fragment>
+          <Layout.Header><Toolbar/></Layout.Header>
+          <Layout.Content>
+            <StoryBook.Provider>
+              <Router>
+                <PreviewProvider path='/preview/:storyId'/>
+              </Router>
+            </StoryBook.Provider>
+          </Layout.Content>
+          <Layout.Footer>Footer</Layout.Footer>
+        </React.Fragment>
+      </Layout>
     </Layout>
-  </Layout>
-);
+  )
+});
 
 class App extends Component {
-  state = {
-    preview: null
-  };
-
   render() {
     return (
       <Theme.Provider className="App">
-        <Router>
-          <AppLayout path='/'></AppLayout>
-          <ComponentRepo path='component.list/:list'/>
-        </Router>
+        <AppLayout/>
+        {/*<Location>*/}
+          {/*{({ location }) => (*/}
+            {/*<TransitionGroup>*/}
+              {/*<CSSTransition*/}
+                {/*key={location.key}*/}
+                {/*classNames="fade"*/}
+                {/*timeout={500}*/}
+              {/*>*/}
+                {/**/}
+              {/*</CSSTransition>*/}
+            {/*</TransitionGroup>*/}
+          {/*)}*/}
+        {/*</Location>*/}
       </Theme.Provider>
     );
   }

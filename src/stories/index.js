@@ -1,9 +1,7 @@
-import {configure, getStorybook as _getStorybook} from '@storybook/react';
+import {configure, getStorybook} from '@storybook/react';
 import * as StoryUtil from './utils';
-import Events from '@storybook/core-events';
 
-export const getStorybook = _getStorybook;
-const StoryStore = new Map();
+let __storyStore = null;
 
 
 function loadStories() {
@@ -13,19 +11,25 @@ function loadStories() {
 
 configure(loadStories, module);
 
-export function configureStory(api) {
-  let stories = getStorybook().map(v => {
-    return {
-      kind: v.kind,
-      stories: v.stories.map(s => {
-        StoryStore.set(StoryUtil.toStoryID(v.kind, s.name), s);
-        return s.name;
-      })
-    }
+export function flattenStorybook() {
+  if (__storyStore) return __storyStore;
+  __storyStore = new Map();
+
+  getStorybook().forEach(v => {
+    return v.stories.forEach(s => {
+      let id = StoryUtil.toStoryID(v.kind, s.name);
+      __storyStore.set(id, {
+        id,
+        kind: v.kind,
+        fileName: v.fileName,
+        name: s.name,
+        render: s.render
+      });
+    });
   });
-  api.emit(Events.SET_STORIES, {stories});
+  return __storyStore;
 }
 
 export function getStoryById(id) {
-  return StoryStore.get(id);
+  return __storyStore.get(id);
 }
