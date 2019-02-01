@@ -1,5 +1,6 @@
 const path = require('path');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const CleanWebpackPlugin = require('clean-webpack-plugin');
 const webpack = require("webpack");
 // const CompressionPlugin = require('compression-webpack-plugin');
 
@@ -133,6 +134,7 @@ webpackConfig.entry = {
   index: path.join(componentSrc, pkg.entry),
   story: path.join(componentSrc, pkg.story)
 };
+webpackConfig.plugins.unshift(new CleanWebpackPlugin(['dist'], {root: componentSrc}));
 
 webpack(webpackConfig, (err, stats) => {
   if (err || stats.hasErrors()) {
