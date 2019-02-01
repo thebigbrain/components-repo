@@ -1,9 +1,10 @@
 import React from 'react';
+import styles from './Demo.css';
 
 class Demo extends React.Component {
   render() {
     return (
-      <div>a demo</div>
+      <div className={styles.demo}>a demo</div>
     );
   }
 }
