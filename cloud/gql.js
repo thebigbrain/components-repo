@@ -19,8 +19,6 @@ const root = {
   }
 };
 
-module.exports = graphqlHTTP({
-  schema: schema,
-  rootValue: root,
-  graphiql: true,
-});
+module.exports = {
+  default: graphqlHTTP({schema: schema, rootValue: root, graphiql: true})
+};

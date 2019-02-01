@@ -9,7 +9,7 @@ const main = require('./main');
 
 function loadMiddleWares(app) {
   for (let k in main) {
-    app.use(`/${k}`, main[k]);
+    app.use(`/${k}`, main[k].default);
   }
 }
 
