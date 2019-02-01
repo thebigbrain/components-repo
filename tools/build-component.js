@@ -76,7 +76,7 @@ const cssLoader = {
 const webpackOutput = {
   path: path.resolve(__dirname, 'dist'),
   chunkFilename: '[name].bundle.js',
-  filename: 'index.js'
+  filename: '[name].js'
 };
 
 const webpackConfig = {
@@ -129,7 +129,10 @@ let pkg = require(pkgPath);
 const componentSrc = path.dirname(pkgPath);
 babelLoader.include = componentSrc;
 webpackOutput.path = path.join(componentSrc, 'dist');
-webpackConfig.entry = path.join(componentSrc, pkg.entry);
+webpackConfig.entry = {
+  index: path.join(componentSrc, pkg.entry),
+  story: path.join(componentSrc, pkg.story)
+};
 
 webpack(webpackConfig, (err, stats) => {
   if (err || stats.hasErrors()) {

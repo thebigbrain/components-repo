@@ -5,5 +5,6 @@
   "dependencies": {
 
   },
-  "entry": "./Demo.js"
+  "entry": "./Demo.js",
+  "story": "demo.stories.js"
 }
