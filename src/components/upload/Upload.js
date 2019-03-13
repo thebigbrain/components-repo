@@ -1,7 +1,7 @@
 import React from 'react';
 import JSZip from 'jszip';
 
-import Fetch from '../../runtime/fetch';
+import Webrpc from '../../runtime/webrpc';
 
 
 // function readFile(file) {
@@ -30,7 +30,7 @@ class Upload extends React.Component {
 
   onChange = async (evt) => {
     let content = await zipFiles(evt.target.files);
-    let data = await Fetch.upload(content);
+    let data = await Webrpc.upload(content);
     console.log(data);
   };
 

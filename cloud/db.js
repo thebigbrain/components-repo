@@ -4,11 +4,11 @@ const level = require('level');
 //    This will create or open the underlying store.
 const db = level('components-repo');
 
-function middleWare(req, res, next) {
+function middleware(req, res, next) {
   console.log(db);
   res.send(db);
 }
 
 module.exports = {
-  default: middleWare
+  default: middleware
 };
