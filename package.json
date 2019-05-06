@@ -28,7 +28,7 @@
     "build-storybook": "build-storybook -s public",
     "server": "nodemon --watch cloud/ cloud/index.js",
     "component:build": "node ./tools/build-component ./src/components/demo",
-    "babel:build": "node ./tools/babel-build.js ./src/components/demo"
+    "babel:build": "node ./tools/babel-build.js"
   },
   "eslintConfig": {
     "extends": "react-app"

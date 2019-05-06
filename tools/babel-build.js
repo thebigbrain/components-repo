@@ -3,16 +3,16 @@ const path = require('path');
 const fs = require('fs');
 
 const args = process.argv.slice(2);
-const pkgPath = path.join(__dirname, '..', args[0], 'package.json');
-const pkg = require(pkgPath);
-const componentSrc = path.dirname(pkgPath);
+const componentSrc = path.join(__dirname, '../src/', args[0]);
+const out = path.join(__dirname, '../dist/', args[0]);
 
 const options = {
   presets: ["@babel/preset-react"]
 };
 
-let code = fs.readFileSync(path.resolve(componentSrc, pkg.entry));
+let code = fs.readFileSync(path.resolve(componentSrc));
 let result = babel.transformSync(code, options); // => { code, map, ast }
 
+fs.writeFileSync(out, result.code);
 
-console.log(result.code);
+module.exports = {};

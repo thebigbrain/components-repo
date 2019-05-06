@@ -2,7 +2,7 @@ const level = require('level');
 
 // 1) Create our database, supply location and options.
 //    This will create or open the underlying store.
-const db = level('components-repo');
+const db = level('data/components-repo');
 
 function middleware(req, res, next) {
   console.log(db);

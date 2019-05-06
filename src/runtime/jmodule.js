@@ -1,9 +1,9 @@
 class JModule {
-  constructor({id, version, code, require}) {
+  constructor({id, code, deps, require, version}) {
     this.id = id;
     this.version = version;
     this.code = code;
-    // this.imports = imports;
+    this.deps = deps;
     this.require = require;
 
     this.exports = {};
@@ -11,7 +11,7 @@ class JModule {
 
   instantiate() {
     // eslint-disable-next-line
-    let fn = new Function('module', 'exports', 'require', `"use strict"; module.exports=${this.code}`);
+    let fn = new Function('module', 'exports', 'require', `${this.code}`);
     fn(this, this.exports, this.require);
   }
 }

@@ -5,12 +5,13 @@ import {Router} from '@reach/router';
 //   TransitionGroup,
 //   CSSTransition
 // } from "react-transition-group";
-import Theme from './components/theme/Theme';
+import Theme from 'components/theme/Theme';
 import './App.css';
-import ComponentRepo from './components/repo/ComponentRepo';
-import PreviewProvider from './containers/PreviewProvider';
-import StoryBook from './containers/StoryBook';
-import Toolbar from './components/toolbar/Toolbar';
+import ComponentRepo from 'components/repo/ComponentRepo';
+import PreviewProvider from 'containers/PreviewProvider';
+import StoryBook from 'containers/StoryBook';
+import Toolbar from 'components/toolbar/Toolbar';
+
 
 const AppLayout = React.memo(({children, location}) => {
   return (
