@@ -8,9 +8,9 @@ class Isolate {
   depCache = new DependencyCache();
   __require = (moduleId) => {
     let module = this.depCache.get(moduleId);
-    console.log(module, moduleId);
+    // console.log(module, moduleId);
     return module.exports;
-  }
+  };
 
   async loadModules(modules = []) {
     this.depCache.init(modules);
