@@ -1,1 +1,1 @@
-import './runtime';
+import '@dora-js/runtime';

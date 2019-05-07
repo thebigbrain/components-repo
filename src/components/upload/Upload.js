@@ -1,7 +1,7 @@
 import React from 'react';
 import JSZip from 'jszip';
 
-import Webrpc from '../../runtime/webrpc';
+import Webrpc from '../../@dora-js/runtime/webrpc';
 
 
 // function readFile(file) {

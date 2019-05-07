@@ -1,6 +1,4 @@
 import React, {Component} from 'react';
-import Layout from 'antd/es/layout';
-import {Router} from '@reach/router';
 // import {
 //   TransitionGroup,
 //   CSSTransition
@@ -38,7 +36,7 @@ import './App.css';
 
 class App extends Component {
   render() {
-    return (<div>hello app</div>);
+    return (<div className='App'>hello app</div>);
   }
 }
 
