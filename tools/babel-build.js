@@ -1,19 +1,23 @@
 const path = require('path');
 
-const Builder = require('./dora/tranforms/builder');
+const Builder = require('./dora/Builder');
 
 const args = process.argv.slice(2);
-const componentSrc = path.join(__dirname, '../src/', args[0]);
-const out = path.join(__dirname, '../dist/', args[0]);
+const entry = path.join(__dirname, '../src/', args[0]);
 
-const builder = new Builder(componentSrc);
-const deps = builder
-  .transform()
-  .getDeps();
+const builder = new Builder();
+const tree = builder.buildTree(entry);
+// const deps = builder
+//   .transform(entry)
+//   .getDeps();
+//
+//
+// console.log([
+//   {id: args[0], deps},
+// ]);
 
+// console.log(builder.entry, builder.entryBasename, builder.entryDir, builder.entryAbsoluteDir, builder.root);
 
-console.log([
-  {id: args[0], deps},
-]);
+// deps.forEach(dep => console.log(require.resolve(dep)));
 
-builder.write(out);
+builder.write();

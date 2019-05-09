@@ -5,6 +5,9 @@ const fs = require('fs');
 const path = require('path');
 const mkdirp = require('mkdirp');
 
+const Asset = require('./Asset');
+
+
 const options = {
   presets: [
     "@babel/preset-react",
@@ -25,26 +28,26 @@ const options = {
 };
 
 class Builder {
-  constructor(src) {
-    this.src = src;
-    this.dir = path.dirname(src);
-    this.ast = null;
-    this.code = null;
-    // this.sourceMap = null;
+  constructor() {
+    this.assetTree = new Map();
   }
 
-  transform() {
-    let src = fs.readFileSync(path.resolve(this.src));
-    let result = babelCore.transformSync(src, options); // => { code, map, ast }
-    this.code = result.code;
-    // this.ast = result.ast;
-    // this.sourceMap = result.map;
-    return this;
+  static transform(entry) {
+    let asset = new Asset(entry);
+
+    if (asset.isDoraModule) return asset;
+
+    let source = asset.resolveLocal();
+    let result = babelCore.transformSync(source, options); // => { code, map, ast }
+
+    asset.code = result.code;
+
+    return asset;
   }
 
-  parse() {
-    if (this.ast != null) return;
-    this.ast = babelParser.parse(this.code, {
+  static parse(asset) {
+    if (!asset.code) return;
+    asset.ast = babelParser.parse(asset.code, {
       allowReturnOutsideFunction: true,
       strictMode: false,
       sourceType: 'module',
@@ -52,27 +55,31 @@ class Builder {
     });
   }
 
-  getDeps() {
-    this.parse();
-    const deps = [];
-
-    traverse(this.ast, {
+  static getDeps(asset) {
+    if (!asset.ast) return;
+    traverse(asset.ast, {
       enter(path) {
         let node = path.node;
         if (node.type === 'CallExpression' && node.callee.name === 'require') {
           // noinspection JSAnnotator
-          deps.push(node.arguments[0].value);
+          asset.deps.add(node.arguments[0].value);
         }
       }
     });
-
-    return deps;
   }
 
-  write(out) {
-    const outDir = path.dirname(out);
-    mkdirp.sync(outDir);
-    fs.writeFileSync(out, this.code);
+  buildTree(entry) {
+    const asset = Builder.transform(entry);
+    Builder.parse(asset);
+    Builder.getDeps(asset);
+
+    this.assetTree.set(asset.name, asset);
+
+    asset.resolveDeps(this.buildTree);
+  }
+
+  write() {
+    console.log(this.assetTree);
   }
 }
 

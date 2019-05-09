@@ -5,7 +5,6 @@ import React, {Component} from 'react';
 // } from "react-transition-group";
 // import Theme from 'components/theme/Theme';
 import './App.css';
-// import ComponentRepo from 'components/repo/ComponentRepo';
 // import PreviewProvider from 'containers/PreviewProvider';
 // import StoryBook from 'containers/StoryBook';
 // import Toolbar from 'components/toolbar/Toolbar';
