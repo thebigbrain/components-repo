@@ -2,6 +2,29 @@
   "name": "components-repo",
   "version": "0.1.0",
   "private": true,
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "storybook": "start-storybook -p 9009 -s public",
+    "build-storybook": "build-storybook -s public",
+    "server": "nodemon --watch cloud/ cloud/index.js",
+    "component:build": "node ./tools/build-component ./src/components/demo",
+    "babel:build": "node ./tools/babel-build.js entry.js",
+    "webpack:build": "webpack --progress",
+    "dora": "node ./tools/dora/cli.js",
+    "dora:build": "dora build"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ],
   "dependencies": {
     "@reach/router": "^1.2.1",
     "antd": "^3.13.0",
@@ -22,28 +45,6 @@
     "react-virtualized": "^9.21.0",
     "unzip-stream": "^0.3.0"
   },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "storybook": "start-storybook -p 9009 -s public",
-    "build-storybook": "build-storybook -s public",
-    "server": "nodemon --watch cloud/ cloud/index.js",
-    "component:build": "node ./tools/build-component ./src/components/demo",
-    "babel:build": "node ./tools/babel-build.js",
-    "webpack:build": "webpack --progress",
-    "dora": "node ./tools/dora/cli.js"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
-  "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not ie <= 11",
-    "not op_mini all"
-  ],
   "devDependencies": {
     "@babel/cli": "^7.2.3",
     "@babel/core": "^7.2.2",
@@ -54,6 +55,8 @@
     "@babel/preset-env": "^7.3.1",
     "@babel/preset-react": "^7.0.0",
     "@babel/traverse": "^7.4.4",
+    "@dora-js/dora": "0.0.1",
+    "@parcel/logger": "^1.11.0",
     "babel-loader": "8.0.4",
     "clean-webpack-plugin": "^1.0.1",
     "commander": "^2.20.0",

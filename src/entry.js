@@ -1,8 +1,8 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import 'antd/dist/antd.css';
-import './index.css';
-import App from 'components/app/App';
+import React from 'dora:react';
+import ReactDOM from 'dora:react-dom';
+import 'dora:antd/dist/antd.css';
+import '/index.css';
+import App from '/components/app/App';
 import * as serviceWorker from './serviceWorker';
 
 // import './addons';

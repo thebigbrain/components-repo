@@ -1,12 +1,12 @@
 const path = require('path');
-
 const Builder = require('./dora/Builder');
 
-const args = process.argv.slice(2);
-const entry = path.join(__dirname, '../src/', args[0]);
+const posix = path.posix;
 
-const builder = new Builder();
-const tree = builder.buildTree(entry);
+let entry = process.argv.slice(2)[0];
+
+const builder = new Builder(entry);
+builder.build();
 // const deps = builder
 //   .transform(entry)
 //   .getDeps();
