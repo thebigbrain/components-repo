@@ -14,7 +14,8 @@
     "babel:build": "node ./tools/babel-build.js entry.js",
     "webpack:build": "webpack --progress",
     "dora": "node ./tools/dora/cli.js",
-    "dora:build": "dora build"
+    "dora:build": "dora build",
+    "parcel:build": "node ./tools/parcel.js"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -43,7 +44,9 @@
     "react-dom": "^16.7.0",
     "react-transition-group": "^2.5.3",
     "react-virtualized": "^9.21.0",
-    "unzip-stream": "^0.3.0"
+    "unzip-stream": "^0.3.0",
+    "@parcel/fs": "latest",
+    "@parcel/utils": "latest"
   },
   "devDependencies": {
     "@babel/cli": "^7.2.3",
@@ -65,13 +68,17 @@
     "cssnano": "^4.1.10",
     "directory-named-webpack-plugin": "^4.0.0",
     "extract-text-webpack-plugin": "^3.0.2",
+    "fast-glob": "^2.2.7",
     "html-webpack-plugin": "^3.2.0",
     "json-loader": "^0.5.7",
     "mkdirp": "^0.5.1",
     "nodemon": "^1.18.9",
+    "parcel-bundler": "^1.12.3",
+    "postcss": "^7.0.16",
     "postcss-import": "^12.0.1",
     "postcss-loader": "^3.0.0",
     "postcss-preset-env": "^6.6.0",
+    "postcss-value-parser": "^3.3.1",
     "sugarss": "^2.0.0",
     "uglifyjs-webpack-plugin": "^2.1.1",
     "v8-compile-cache": "^2.0.2",

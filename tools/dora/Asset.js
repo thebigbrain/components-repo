@@ -14,13 +14,13 @@ class Asset {
 
   generate() {
     this.transform();
-    this.collectDeps();
+    this.collectDependencies();
   }
 
   transform() {
   }
 
-  collectDeps() {
+  collectDependencies() {
   }
 
   toJSON() {

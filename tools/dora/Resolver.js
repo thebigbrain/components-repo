@@ -1,10 +1,9 @@
 const fs = require('fs');
 const path = require('path');
-
-const posix = path.posix;
-
+const Parser = require('./Parser');
 const Asset = require('./Asset');
 
+const posix = path.posix;
 const rootAsset = new Asset('/');
 
 function isDora(name) {
@@ -34,6 +33,7 @@ class Resolver {
     this.options = options;
 
     this.tree = new Map();
+    this.parser = new Parser();
   }
 
   resolve(name, parentAsset = rootAsset) {
@@ -60,7 +60,7 @@ class Resolver {
       name = posix.normalize(posix.resolve(parentAsset.name, name));
     }
     let source = fs.readFileSync(path.join(src, name), 'utf-8');
-    let asset = new Asset(name, {source});
+    const asset = this.parser.getAsset(name, {source});
     asset.generate();
     return asset.toJSON();
   }

@@ -2,12 +2,12 @@ const Asset = require('../Asset');
 const postcss = require('postcss');
 const valueParser = require('postcss-value-parser');
 const postcssTransform = require('../transforms/postcss');
-const CssSyntaxError = require('postcss/lib/css-syntax-error');
-const SourceMap = require('../SourceMap');
-const loadSourceMap = require('../utils/loadSourceMap');
-const path = require('path');
-const urlJoin = require('../utils/urlJoin');
-const isURL = require('../utils/is-url');
+// const CssSyntaxError = require('postcss/lib/css-syntax-error');
+// const SourceMap = require('../SourceMap');
+// const loadSourceMap = require('../utils/loadSourceMap');
+// const path = require('path');
+// const urlJoin = require('../utils/urlJoin');
+// const isURL = require('../utils/is-url');
 
 const URL_RE = /url\s*\("?(?![a-z]+:)/;
 const IMPORT_RE = /@import/;
@@ -19,9 +19,6 @@ class CSSAsset extends Asset {
   constructor(name, options) {
     super(name, options);
     this.type = 'css';
-    this.previousSourceMap = this.options.rendition
-      ? this.options.rendition.map
-      : null;
   }
 
   mightHaveDependencies() {
@@ -123,12 +120,6 @@ class CSSAsset extends Asset {
     });
   }
 
-  async pretransform() {
-    if (this.options.sourceMaps && !this.previousSourceMap) {
-      this.previousSourceMap = await loadSourceMap(this);
-    }
-  }
-
   async transform() {
     await postcssTransform(this);
   }
@@ -150,62 +141,21 @@ class CSSAsset extends Asset {
     if (this.ast) {
       let result = this.ast.render(this.name);
       css = result.css;
-      if (result.map) this.sourceMap = result.map;
     } else {
       css = this.contents;
     }
 
     let js = '';
-    if (this.options.hmr) {
-      this.addDependency('_css_loader');
-
-      js = `
-        var reloadCSS = require('_css_loader');
-        module.hot.dispose(reloadCSS);
-        module.hot.accept(reloadCSS);
-      `;
-    }
-
     if (this.cssModules) {
       js +=
         'module.exports = ' + JSON.stringify(this.cssModules, null, 2) + ';';
-    }
-
-    if (this.options.sourceMaps) {
-      if (this.sourceMap) {
-        this.sourceMap = await new SourceMap().addMap(this.sourceMap);
-      }
-
-      if (this.previousSourceMap) {
-        this.previousSourceMap.sources = this.previousSourceMap.sources.map(v =>
-          path.join(
-            path.dirname(this.relativeName),
-            this.previousSourceMap.sourceRoot || '',
-            v
-          )
-        );
-        if (this.sourceMap) {
-          this.sourceMap = await new SourceMap().extendSourceMap(
-            this.previousSourceMap,
-            this.sourceMap
-          );
-        } else {
-          this.sourceMap = await new SourceMap().addMap(this.previousSourceMap);
-        }
-      } else if (!this.sourceMap) {
-        this.sourceMap = new SourceMap().generateEmptyMap(
-          this.relativeName,
-          css
-        );
-      }
     }
 
     return [
       {
         type: 'css',
         value: css,
-        cssModules: this.cssModules,
-        map: this.sourceMap
+        cssModules: this.cssModules
       },
       {
         type: 'js',
@@ -213,31 +163,6 @@ class CSSAsset extends Asset {
         hasDependencies: false
       }
     ];
-  }
-
-  generateErrorMessage(err) {
-    // Wrap the error in a CssSyntaxError if needed so we can generate a code frame
-    if (err.loc && !err.showSourceCode) {
-      err = new CssSyntaxError(
-        err.message,
-        err.loc.line,
-        err.loc.column,
-        this.contents
-      );
-    }
-
-    err.message = err.reason || err.message;
-    err.loc = {
-      line: err.line,
-      column: err.column
-    };
-
-    if (err.showSourceCode) {
-      err.codeFrame = err.showSourceCode();
-      err.highlightedCodeFrame = err.showSourceCode(true);
-    }
-
-    return err;
   }
 }
 
