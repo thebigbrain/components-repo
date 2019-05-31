@@ -2,19 +2,21 @@ const fs = require('fs');
 const path = require('path');
 const {mkdirp} = require('@parcel/fs');
 const {promisify} = require('@parcel/utils');
-const {getId} = require('./util');
+const {getAssetId} = require('./util');
 
 class AssetWriter {
   constructor(options) {
     this.options = options;
+
+    this.depGraph = new Set();
   }
 
   isLocal(asset) {
-    return getId(asset.relativeName).startsWith('local:');
+    return getAssetId(asset).startsWith('local:');
   }
 
   async setup(asset, outDir) {
-    let id = getId(asset.relativeName);
+    let id = getAssetId(asset);
     let name = path.resolve(outDir, id.split(':')[1]);
     if (name.includes(path.sep)) {
       // console.log(path.dirname(asset.relativeName));
@@ -27,15 +29,31 @@ class AssetWriter {
   }
 
   async write(asset, outDir) {
-    if (!this.isLocal(asset)) return;
-    await this.setup(asset, outDir);
-    // console.log(getId(asset.relativeName), asset.type, asset.generated[asset.type].length);
-    this.dest.write(asset.generated[asset.type]);
-    this.dest.end();
+    if (this.isLocal(asset)) {
+      await this.setup(asset, outDir);
+      this.dest.write(asset.generated[asset.type]);
+      this.dest.end();
+    }
 
-    console.log(asset.relativeName, Array.from(asset.dependencies.keys()));
+    const posix = path.posix;
+    let dirName = posix.dirname(asset.relativeName);
+
+    const id = getAssetId(asset);
+    const deps = [];
+    asset.dependencies.forEach((v, k) => {
+      if (v.includedInParent) return;
+
+      if (v.name.startsWith('/')) {
+        deps.push(`local:${v.name.substr(1)}`);
+      } else if (v.name.startsWith('.')) {
+        deps.push(`local:${posix.join(dirName, v.name)}`);
+      } else {
+        deps.push(v.name);
+      }
+    });
+
+    this.depGraph.add({id, deps});
   }
-
 }
 
 module.exports = AssetWriter;

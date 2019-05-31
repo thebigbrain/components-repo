@@ -1,9 +1,11 @@
 const Bundler = require('parcel-bundler');
 const Path = require('path');
+const fs = require('fs');
 const AssetWriter = require('./parcel/AssetWriter');
 
 // 入口文件路径
-const file = Path.join(__dirname, '../src/entry.js');
+const entryFile = Path.join(__dirname, '../src/entry.js');
+const entryHtml = Path.join(__dirname, '../public/index.html');
 
 // Bundler 选项
 const options = {
@@ -26,7 +28,7 @@ const options = {
 };
 
 // 使用提供的入口文件路径和选项初始化 bundler
-const bundler = new Bundler(file, options);
+const bundler = new Bundler(entryFile, options);
 bundler.assetWriter = new AssetWriter({});
 bundler.addPackager('js', require.resolve('./parcel/dummyPackager'));
 bundler.addPackager('css', require.resolve('./parcel/dummyPackager'));
@@ -37,10 +39,50 @@ bundler.on('bundled', (bundle) => {
   // console.log(Array.from(bundle.assets).map(asset => asset.relativeName));
 });
 
-bundler.on('buildEnd', () => {
+bundler.on('buildEnd', async () => {
   // 做一些操作……
-  console.log('build end');
+  const deps = JSON.stringify(Array.from(bundler.assetWriter.depGraph));
+  let html = fs.readFileSync(entryHtml, 'utf-8').toString();
+  let bodyContent = findBodyContent(html);
+
+  html = html.replace('%PUBLIC_URL%', '.');
+  let headTailPos = html.search('</head>');
+  html = insertAt(html, headTailPos, `
+    <script type="text/javascript">window.__COMPONENTS_REPO_COMPONENTS_DEPENDENCY_GRAPH = ${deps};</script>
+  `);
+
+  removeScripts(bodyContent);
+  fs.writeFileSync(
+    Path.resolve(bundler.options.outDir, Path.basename(entryHtml)),
+    html
+  );
 });
+
+function insertAt(origin, pos, s) {
+  let head = origin.substring(0, pos);
+  let tail = origin.substring(pos);
+  return `${head}${s}${tail}`;
+}
+
+function findBodyContent(html) {
+  return findTagContent('body', html);
+}
+
+function findWrappedTagContent(tag, s) {
+  let startPos = s.search(`<${tag}>`);
+  let endPos = s.search(`</${tag}>`) + `</${tag}>`.length;
+  return s.substring(startPos, endPos);
+}
+
+function findTagContent(tag, s) {
+  let startPos = s.search(`<${tag}>`);
+  let endPos = s.search(`</${tag}>`) + `</${tag}>`.length;
+  return s.substring(startPos, endPos);
+}
+
+function removeScripts(bodyContent) {
+
+}
 
 // 运行 bundler，这将返回主 bundle
 // 如果你正在使用监听模式，请使用下面这些事件，这是因为该 promise 只会触发一次，而不是每次重新构建时都触发

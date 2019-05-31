@@ -27,6 +27,8 @@
     "not op_mini all"
   ],
   "dependencies": {
+    "@parcel/fs": "latest",
+    "@parcel/utils": "latest",
     "@reach/router": "^1.2.1",
     "antd": "^3.13.0",
     "body-parser": "^1.18.3",
@@ -44,9 +46,7 @@
     "react-dom": "^16.7.0",
     "react-transition-group": "^2.5.3",
     "react-virtualized": "^9.21.0",
-    "unzip-stream": "^0.3.0",
-    "@parcel/fs": "latest",
-    "@parcel/utils": "latest"
+    "unzip-stream": "^0.3.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.2.3",
@@ -60,6 +60,9 @@
     "@babel/traverse": "^7.4.4",
     "@dora-js/dora": "0.0.1",
     "@parcel/logger": "^1.11.0",
+    "acorn": "^6.1.1",
+    "acorn-jsx": "^5.0.1",
+    "acorn-walk": "^6.1.1",
     "babel-loader": "8.0.4",
     "clean-webpack-plugin": "^1.0.1",
     "commander": "^2.20.0",
@@ -79,6 +82,7 @@
     "postcss-loader": "^3.0.0",
     "postcss-preset-env": "^6.6.0",
     "postcss-value-parser": "^3.3.1",
+    "posthtml": "^0.11.4",
     "sugarss": "^2.0.0",
     "uglifyjs-webpack-plugin": "^2.1.1",
     "v8-compile-cache": "^2.0.2",

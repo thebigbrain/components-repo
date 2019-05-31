@@ -2,9 +2,10 @@ function isNodeModule(name) {
   return name.search('node_modules') !== -1;
 }
 
-function getId(name) {
+function getAssetId(asset) {
+  let name = asset.relativeName;
   if (isNodeModule(name)) {
-    return name.replace(/.*node_modules\//, 'npm:');
+    return name.replace(/.*node_modules\//, 'npm:').replace(/\/index.js$/, '');
   } else {
     return `local:${name}`;
   }
@@ -23,6 +24,6 @@ function getDeps(deps) {
 }
 
 module.exports = {
-  getId,
+  getAssetId,
   getDeps
 };
