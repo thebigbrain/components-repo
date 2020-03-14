@@ -60,7 +60,7 @@
     "@babel/traverse": "^7.4.4",
     "@dora-js/dora": "0.0.1",
     "@parcel/logger": "^1.11.0",
-    "acorn": "^6.1.1",
+    "acorn": "^6.4.1",
     "acorn-jsx": "^5.0.1",
     "acorn-walk": "^6.1.1",
     "babel-loader": "8.0.4",
